@@ -1,5 +1,9 @@
 # Testing Aumentado con #IA
 
+La ingeniería de software moderna exige ciclos de entrega cada vez más rápidos y rigurosos. Al integrar **IA generativa** y prácticas de *prompt engineering* con **testing automatizado** y herramientas de última generación, ampliamos la cobertura y reducimos el tiempo de detección de defectos sin sacrificar la calidad.
+
+En este repositorio encontrarás
+
 - Requerimientos
   - Requerimientos Funcionales
   - Requeimientos No funcionales
