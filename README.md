@@ -31,7 +31,11 @@ La ingeniería de software moderna exige ciclos de entrega cada vez más rápido
 
 En este repositorio encontrarás
 
-## Prompt engineering
+## Temas
+- Prompt engineering
+  - Primeros Prompts
+  - Multipropmts
+- Context Engineering
 - Requerimientos
   - Requerimientos Funcionales
   - Requeimientos No funcionales
