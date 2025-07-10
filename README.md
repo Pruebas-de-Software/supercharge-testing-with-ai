@@ -1,6 +1,6 @@
 # Testing Aumentado con #IA
 
-Estamos viviendo una revolución en el mundo del software, nos encontramos en un punto donde encontramos Prompts en inglés en medio de nuestro código, en medio de nuestras pruebas, lo que antes era código ahora es lenguaje natural.
+Estamos viviendo una revolución en el mundo del software, nos encontramos en un punto donde encontramos Prompts en medio de nuestro código, en medio de nuestras pruebas, lo que antes era código ahora es lenguaje natural.
 
 La IA alcancaza 78% de precisión en preguntas científicas de nivel PhD: la IA está escalando barreras que antes parecían inalcanzables.
 
