@@ -2,6 +2,23 @@
 
 Estamos viviendo una revolución en el mundo del software, nos encontramos en un punto donde encontramos Prompts en medio de nuestro código, en medio de nuestras pruebas, lo que antes era código ahora es lenguaje natural.
 
+```python
+# 🧠→💻  Natural-language testing inside your code
+prompt = """
+Enumera escenarios y ejemplos para probar exhaustivamente la función
+calcular_promedio(): casos normales, de borde y entradas inválidas.
+"""
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": prompt}],
+)
+
+print(response.choices[0].message.content)  # ← pruebas listas para usar
+
+```
+
+
 La IA alcancaza 78% de precisión en preguntas científicas de nivel PhD: la IA está escalando barreras que antes parecían inalcanzables.
 
 ![AIPhdBm](https://github.com/Pruebas-de-Software/supercharge-testing-with-ai/blob/main/material/AI_performance_on_a_set_of_Ph.D.-level_science_questions.png)
