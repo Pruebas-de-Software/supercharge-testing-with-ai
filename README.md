@@ -3,7 +3,7 @@
 Estamos viviendo una revolución en el mundo del software, nos encontramos en un punto donde encontramos Prompts en medio de nuestro código, en medio de nuestras pruebas, lo que antes era código ahora es lenguaje natural.
 
 ```python
-# 🧠→💻  Natural-language testing inside your code
+# 🧠→💻  Natural-language testing "inside your code"
 prompt = """
 Enumera escenarios y ejemplos para probar exhaustivamente la función
 calcular_promedio(): casos normales, de borde y entradas inválidas.
