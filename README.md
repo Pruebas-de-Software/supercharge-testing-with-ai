@@ -34,7 +34,7 @@ En este repositorio encontrarás
 ## Temas
 - Prompt engineering
   - Primeros Prompts
-  - Multipropmts
+  - Multiprompts
 - Context Engineering
 - Requerimientos
   - Requerimientos Funcionales
