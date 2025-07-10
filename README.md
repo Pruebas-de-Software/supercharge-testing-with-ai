@@ -6,7 +6,7 @@ La IA alcancaza 78% de precisión en preguntas científicas de nivel PhD: la IA 
 
 ![AIPhdBm](https://github.com/Pruebas-de-Software/supercharge-testing-with-ai/blob/main/material/AI_performance_on_a_set_of_Ph.D.-level_science_questions.png)
 
-El Testing aumentado con IA, puede apalancarse de estos avances para asegurando calidad de la próxima generación de soluciones digitales.
+El Testing aumentado con IA, puede apalancarse de estos avances para asegurar la calidad de la próxima generación de soluciones digitales.
 
 La ingeniería de software moderna exige ciclos de entrega cada vez más rápidos y rigurosos. Al integrar **IA generativa** y prácticas de *prompt engineering* con **testing automatizado** y herramientas de última generación, ampliamos la cobertura y reducimos el tiempo de detección de defectos sin sacrificar la calidad.
 
