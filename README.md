@@ -23,6 +23,8 @@ La IA alcancaza 78% de precisión en preguntas científicas de nivel PhD: la IA 
 
 ![AIPhdBm](https://github.com/Pruebas-de-Software/supercharge-testing-with-ai/blob/main/material/AI_performance_on_a_set_of_Ph.D.-level_science_questions.png)
 
+[ref: AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard)
+
 El Testing aumentado con IA, puede apalancarse de estos avances para asegurar la calidad de la próxima generación de soluciones digitales. 
 
 Este mundo es alucinante, el mercado es enorme y crece a cada minuto, asegurar la calidad de estos nuevos ecosistemas es fundamental.
