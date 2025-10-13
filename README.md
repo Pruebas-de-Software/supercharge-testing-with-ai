@@ -45,6 +45,8 @@ En este repositorio encontrarás
 - Historias de Usuario
 - Criterios de Aceptación
 - Casos de Pruebas
+- MCP (Model Context Protocol)
+  - Playwgraigh MCP
 
 ---
 
