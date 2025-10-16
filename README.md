@@ -46,7 +46,7 @@ En este repositorio encontrarás
 - Criterios de Aceptación
 - Casos de Pruebas
 - MCP (Model Context Protocol)
-  - Playwgraigh MCP
+  - Playwright MCP
 
 ---
 
