@@ -89,52 +89,268 @@ Los ejemplos deben ser correctos: un ejemplo defectuoso puede propagar el mismo 
 
 ### Multiprompts
 
-En este curso utilizaremos *multiprompts* para referirnos a una **secuencia de prompts que divide una tarea compleja en etapas verificables**.
+En este curso utilizaremos *multiprompts* o *encadenamiento de prompts* para referirnos a un flujo donde **la salida de una etapa se incorpora explícitamente como entrada de la siguiente**. La utilidad está en obtener artefactos intermedios que podamos revisar y corregir antes de generar las pruebas.
 
-| Etapa | Objetivo | Resultado |
+**Objetivo de aprendizaje:** diseñar un flujo de generación de pruebas unitarias que mantenga trazabilidad entre contrato, plan y código, y evaluar sus resultados mediante ejecución y revisión.
+
+#### Enfoque del OpenAI Cookbook
+
+El notebook [Unit test writing using a multi-step prompt](https://github.com/openai/openai-cookbook/blob/main/examples/Unit_test_writing_using_a_multi-step_prompt.ipynb) presenta tres etapas: **Explain** (explicar una función Python), **Plan** (proponer escenarios) y **Execute** (escribir pruebas). En ese ejemplo, “Execute” significa generar código, no ejecutar la suite.
+
+El flujo incluye ampliación condicional de planes breves, selección de modelos por etapa, salida en streaming y reintentos limitados cuando `ast.parse` detecta errores de sintaxis. El conteo de categorías es aproximado; no constituye una medida de cobertura. [Fuente: notebook del OpenAI Cookbook](https://github.com/openai/openai-cookbook/blob/main/examples/Unit_test_writing_using_a_multi-step_prompt.ipynb)
+
+Para INF331 adaptaremos este patrón incorporando un contrato explícito y una etapa adicional de validación:
+
+| Etapa | Entradas | Artefacto revisable |
 |---|---|---|
-| 1. Analizar | Detectar información faltante y contradicciones | Preguntas pendientes |
-| 2. Especificar | Organizar los acuerdos del sistema | Requerimientos identificados |
-| 3. Diseñar | Derivar escenarios de prueba | Casos candidatos |
-| 4. Revisar | Buscar omisiones, duplicados y expectativas incorrectas | Observaciones |
-| 5. Consolidar | Incorporar correcciones justificadas | Casos revisados |
+| 1. Explicar | Contrato y función original | Resumen del comportamiento y discrepancias |
+| 2. Planificar | Contrato, función y explicación revisada | Tabla de casos con resultados esperados |
+| 2b. Ampliar, si hace falta | Plan y omisiones identificadas | Plan consolidado sin duplicados |
+| 3. Generar | Contrato, función y plan aprobado | Archivo de pruebas |
+| 4. Validar | Pruebas y módulo original | Resultado real de ejecución y observaciones |
 
-Ejemplo de secuencia:
+Las etapas 1–3 adaptan el patrón de la referencia; el contrato, el ejemplo de reservas y la validación siguiente son propuestas docentes para este curso.
 
-```text
-Prompt 1:
-Analiza esta descripción del sistema.
-Identifica ambigüedades, contradicciones y decisiones pendientes.
-No completes los vacíos con reglas inventadas.
+#### Ejemplo transversal: validar la duración de una reserva
+
+Para aislar una unidad pequeña del sistema, trabajaremos con la regla RN-02: duración entera de 30 a 120 minutos, inclusive. Para este ejercicio añadimos una decisión explícita sobre tipos: valores no enteros, incluidos los booleanos, deben producir `TypeError`. Esta decisión complementa RN-02 únicamente en el ejercicio.
+
+Contrato de `duracion_valida(minutos)`:
+
+- Recibe un entero de Python, excluyendo `bool`.
+- Devuelve `True` si está entre 30 y 120, inclusive.
+- Devuelve `False` si es entero pero está fuera de ese intervalo.
+- Lanza `TypeError` si recibe otro tipo.
+
+Usaremos deliberadamente esta implementación defectuosa como archivo `reservas.py`:
+
+```python
+def duracion_valida(minutos):
+    if type(minutos) is not int:
+        raise TypeError("La duración debe ser un entero")
+    return 30 <= minutos < 120
 ```
 
-```text
-Prompt 2:
-Usa la descripción y las respuestas validadas que adjunto.
-Redacta requerimientos con ID, descripción, fuente
-y método de verificación.
-Mantén las decisiones no resueltas en una sección aparte.
-```
+El contrato es el oráculo. La implementación es el objeto bajo prueba: si ambos difieren, no debemos modificar el resultado esperado para imitar el defecto.
+
+#### Paso 1: explicar y contrastar
+
+El objetivo es producir un resumen verificable del código, no solicitar una narración del razonamiento interno del modelo.
 
 ```text
-Prompt 3:
-A partir de estos requerimientos revisados, diseña casos
-con particiones de equivalencia y valores límite.
-Vincula cada caso con los requerimientos que verifica.
+Analiza el contrato y la función Python adjuntos.
+
+Entrega:
+1. Entradas, salida y excepciones.
+2. Condiciones y límites que aplica la implementación.
+3. Discrepancias entre implementación y contrato.
+4. Preguntas pendientes, si las hay.
+
+Distingue lo especificado de lo observado en el código.
+No inventes la intención del autor.
+No escribas pruebas ni corrijas la función todavía.
+
+Contrato:
+[pegar contrato]
+
+Código:
+[pegar reservas.py]
 ```
+
+**Punto de revisión:** la explicación debe identificar que el contrato incluye 120 y el código lo excluye. Si omite esta discrepancia, corregir la explicación antes de continuar.
+
+#### Paso 2: planificar las pruebas
+
+La siguiente interacción debe recibir el contrato y la función originales, además de la explicación revisada. No basta con transmitir un resumen que podría haber perdido los límites.
 
 ```text
-Prompt 4:
-Revisa los casos contra la especificación original.
-Identifica expectativas sin respaldo, omisiones y duplicados.
-Para cada observación, cita el ID del caso y la regla relevante.
+Diseña un plan de pruebas unitarias para duracion_valida.
+
+Entradas:
+[contrato]
+[código original]
+[explicación revisada]
+
+Aplica particiones de equivalencia y valores límite.
+Incluye tipos inválidos definidos por el contrato.
+
+Devuelve una tabla:
+ID | Categoría | Entrada | Resultado esperado |
+Cláusula del contrato | Riesgo cubierto
+
+Todavía no generes código.
+Deriva las expectativas del contrato, aunque la función lo incumpla.
+No agregues reglas de negocio.
 ```
 
-Cada etapa debe recibir los artefactos necesarios; no debemos asumir que el modelo conserva correctamente toda la conversación.
+Plan de referencia para revisar la respuesta:
 
-La revisión con IA es una ayuda, pero **la coincidencia entre dos respuestas no constituye validación independiente**. Ambas pueden reproducir el mismo supuesto erróneo.
+| ID | Categoría | Entrada | Resultado esperado |
+|---|---|---|---|
+| U-01 | Inferior al mínimo | 29 | `False` |
+| U-02 | Mínimo incluido | 30 | `True` |
+| U-03 | Vecino interior inferior | 31 | `True` |
+| U-04 | Valor interior | 60 | `True` |
+| U-05 | Vecino interior superior | 119 | `True` |
+| U-06 | Máximo incluido | 120 | `True` |
+| U-07 | Superior al máximo | 121 | `False` |
+| U-08 | Entero negativo | -1 | `False` |
+| U-09 | Decimal | 60.0 | `TypeError` |
+| U-10 | Cadena | "60" | `TypeError` |
+| U-11 | Valor ausente | `None` | `TypeError` |
+| U-12 | Booleano | `True` y `False` | `TypeError` |
 
-**Actividad:** comparar un flujo de un solo prompt con esta secuencia. Evaluar calidad de casos, esfuerzo de revisión y errores que llegaron a la última etapa.
+Esta tabla es un punto de partida. No demuestra exhaustividad ni reemplaza la justificación de cada partición.
+
+#### Paso 2b: ampliar únicamente ante una omisión
+
+En el laboratorio decidiremos ampliar el plan cuando falte una cláusula, un límite o una categoría relevante, no solo por alcanzar una cantidad de filas.
+
+```text
+Revisa el plan contra el contrato.
+Faltan los siguientes elementos:
+[omisiones identificadas por la revisión]
+
+Agrega únicamente casos que cubran esas omisiones.
+Conserva los IDs existentes y evita duplicados.
+Devuelve el plan consolidado y una lista breve de cambios.
+Si no hay información suficiente para fijar una expectativa,
+registra la pregunta pendiente.
+```
+
+Por ejemplo, diez casos interiores distintos no compensan la ausencia del valor 120.
+
+#### Paso 3: generar pruebas desde el plan aprobado
+
+```text
+Genera test_reservas.py con pytest a partir del contrato
+y del plan aprobado que adjunto.
+
+Requisitos:
+- Importa duracion_valida desde reservas.
+- No copies ni modifiques la función en el archivo de pruebas.
+- Usa parametrización para agrupar casos equivalentes.
+- Conserva los IDs del plan en los casos parametrizados.
+- Comprueba explícitamente retornos y excepciones.
+- No dependas del reloj, la red ni del orden de ejecución.
+- No cambies expectativas para que la implementación actual pase.
+
+Devuelve solamente el contenido del archivo Python.
+No afirmes que se ejecutó ni que las pruebas pasaron.
+
+Entradas:
+[contrato]
+[código original]
+[plan aprobado]
+```
+
+Un ejemplo de resultado es:
+
+```python
+import pytest
+
+from reservas import duracion_valida
+
+
+@pytest.mark.parametrize(
+    "minutos, esperado",
+    [
+        pytest.param(29, False, id="U-01"),
+        pytest.param(30, True, id="U-02"),
+        pytest.param(31, True, id="U-03"),
+        pytest.param(60, True, id="U-04"),
+        pytest.param(119, True, id="U-05"),
+        pytest.param(120, True, id="U-06"),
+        pytest.param(121, False, id="U-07"),
+        pytest.param(-1, False, id="U-08"),
+    ],
+)
+def test_duracion_entera(minutos, esperado):
+    assert duracion_valida(minutos) is esperado
+
+
+@pytest.mark.parametrize(
+    "minutos",
+    [
+        pytest.param(60.0, id="U-09"),
+        pytest.param("60", id="U-10"),
+        pytest.param(None, id="U-11"),
+        pytest.param(True, id="U-12a"),
+        pytest.param(False, id="U-12b"),
+    ],
+)
+def test_rechaza_tipos_invalidos(minutos):
+    with pytest.raises(TypeError):
+        duracion_valida(minutos)
+```
+
+#### Paso 4: validar y registrar evidencia
+
+Con ambos archivos en la misma carpeta y `pytest` instalado en el entorno del laboratorio:
+
+```bash
+python -m pytest -q
+```
+
+Revisar cuatro aspectos:
+
+| Comprobación | Qué permite establecer |
+|---|---|
+| Análisis sintáctico | El código puede analizarse como Python |
+| Colección de pytest | Se pueden importar y descubrir las pruebas |
+| Ejecución | Cada caso pasa o falla en el entorno registrado |
+| Revisión contra el contrato | Las expectativas y aserciones verifican lo requerido |
+
+Un análisis sintáctico exitoso no comprueba imports, aserciones, cobertura ni corrección funcional.
+
+Con la función defectuosa, U-06 debe fallar: la implementación rechaza 120. Tras corregir `< 120` por `<= 120`, ese caso debe pasar. El alumnado debe conservar las salidas reales de ambas ejecuciones; esta descripción expresa el resultado esperado del ejercicio.
+
+Ante un error, proporcionar al siguiente prompt el código, el contrato y el reporte real. Clasificar primero si el problema está en la implementación, la prueba o el entorno. Limitar las iteraciones, por ejemplo a dos intentos de corrección antes de revisión humana, y conservar los fallos pendientes. No debilitar aserciones para conseguir una suite verde.
+
+#### Orquestación y control del contexto
+
+El flujo puede ejecutarse manualmente en una conversación o automatizarse. Este esquema es pseudocódigo y no depende de un SDK:
+
+```text
+explicacion = explicar(contrato, codigo)
+explicacion = revisar(explicacion, contrato, codigo)
+
+plan = planificar(contrato, codigo, explicacion)
+si hay_omisiones(plan, contrato):
+    plan = ampliar(contrato, plan, omisiones)
+plan = revisar(plan, contrato)
+
+pruebas = generar(contrato, codigo, plan)
+reporte = validar_en_entorno_de_pruebas(pruebas, codigo)
+registrar(contrato, plan, pruebas, reporte)
+```
+
+Cada etapa necesita sus entradas explícitas. Conservar una explicación incorrecta puede propagar el mismo error hasta las aserciones. La coincidencia entre varias respuestas de IA no es validación independiente.
+
+El notebook sirve como referencia de diseño, no como integración lista para copiar: la versión consultada acumula fragmentos del plan en `explanation` en lugar de `plan`, y presenta problemas similares en la ampliación. Además, contiene recomendaciones de modelos fechadas en 2023. Revisar el código y las dependencias antes de reutilizarlo. [Código fuente de la referencia](https://github.com/openai/openai-cookbook/blob/main/examples/Unit_test_writing_using_a_multi-step_prompt.ipynb)
+
+#### Actividad comparativa
+
+Comparar dos alternativas sobre el mismo contrato y la misma implementación defectuosa:
+
+1. Un solo prompt que solicita directamente la suite.
+2. El flujo explicar → planificar → ampliar si corresponde → generar → validar.
+
+Mantener el mismo modelo y configuración cuando sea posible. Registrar fecha, prompts, respuestas, revisiones humanas y versiones del entorno. Si se repite el experimento, usar el mismo número de ejecuciones por alternativa.
+
+| Indicador | Forma de evaluación |
+|---|---|
+| Cobertura del contrato | Cláusulas con casos y aserciones correctas |
+| Detección del defecto | Existe un caso que falla por el límite superior incorrecto |
+| Expectativas inventadas | Casos cuyo resultado no está respaldado por el contrato |
+| Calidad del código | Colección, ejecución, legibilidad y aislamiento |
+| Esfuerzo de revisión | Correcciones humanas y tiempo empleado |
+| Costo del flujo | Número de llamadas y consumo, si está disponible |
+
+**Entregable:** contrato, explicación revisada, plan, archivo de pruebas, evidencia de ejecución y conclusión sustentada en los resultados. No asumir que más prompts siempre producen mejores pruebas.
+
+Como extensión al diseño de pruebas del sistema completo, conservar el flujo **analizar ambigüedades → especificar requerimientos → diseñar casos → revisar contra las fuentes → consolidar**. La misma regla se mantiene: cada etapa utiliza artefactos revisados y conserva trazabilidad hacia la especificación.
+
 
 ## Context Engineering
 
