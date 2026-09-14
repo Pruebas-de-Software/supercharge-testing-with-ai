@@ -23,7 +23,7 @@ La IA alcancaza una saturación en torno al 96% precisión en preguntas científ
 
 ![AIPhdBm](https://github.com/Pruebas-de-Software/supercharge-testing-with-ai/blob/main/material/AI_performance_on_a_set_of_Ph.D.-level_science_questions2026.png)
 
-[ref: AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard)
+[ref: AI Benchmarking Hub](https://epoch.ai/benchmarks/gpqa-diamond?view=graph&tab=release-date)
 
 El Testing aumentado con IA, puede apalancarse de estos avances para asegurar la calidad de la próxima generación de soluciones digitales. 
 
