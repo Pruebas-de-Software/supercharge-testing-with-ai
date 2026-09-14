@@ -34,19 +34,25 @@ La ingeniería de software moderna exige ciclos de entrega cada vez más rápido
 En este repositorio encontrarás
 
 ## Temas
-- Prompt engineering
-  - Primeros Prompts
-  - Multiprompts
-- Context Engineering
-- Requerimientos
-  - Requerimientos Funcionales
-  - Requeimientos No funcionales
-  - Reglas de Negocio
-- Historias de Usuario
-- Criterios de Aceptación
-- Casos de Pruebas
-- MCP (Model Context Protocol)
-  - Playwright MCP
+
+Primera versión del material de **INF331 — Pruebas de Software, UTFSM**, con un caso práctico transversal, prompts, ejemplos y actividades.
+
+[Leer el material completo](material/curso-inf331.md)
+
+- [Prompt engineering](material/curso-inf331.md#prompt-engineering)
+  - [Primeros prompts](material/curso-inf331.md#primeros-prompts)
+  - [Multiprompts](material/curso-inf331.md#multiprompts)
+- [Context Engineering](material/curso-inf331.md#context-engineering)
+- [Requerimientos](material/curso-inf331.md#requerimientos)
+  - [Requerimientos funcionales](material/curso-inf331.md#requerimientos-funcionales)
+  - [Requerimientos no funcionales](material/curso-inf331.md#requerimientos-no-funcionales)
+  - [Reglas de negocio](material/curso-inf331.md#reglas-de-negocio)
+- [Historias de usuario](material/curso-inf331.md#historias-de-usuario)
+- [Criterios de aceptación](material/curso-inf331.md#criterios-de-aceptación)
+- [Casos de prueba](material/curso-inf331.md#casos-de-prueba)
+- [MCP (Model Context Protocol)](material/curso-inf331.md#mcp--model-context-protocol)
+  - [Playwright MCP](material/curso-inf331.md#playwright-mcp)
+- [Trabajo integrador](material/curso-inf331.md#trabajo-integrador)
 
 ---
 
