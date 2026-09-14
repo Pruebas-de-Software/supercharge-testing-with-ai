@@ -19,9 +19,9 @@ print(response.choices[0].message.content)  # ← pruebas listas para usar
 ```
 
 
-La IA alcancaza 78% de precisión en preguntas científicas de nivel PhD: la IA está escalando barreras que antes parecían inalcanzables.
+La IA alcancaza una saturación en torno al 96% precisión en preguntas científicas de nivel PhD: la IA está escalando barreras que antes parecían inalcanzables (hace menos de un año era 78%)
 
-![AIPhdBm](https://github.com/Pruebas-de-Software/supercharge-testing-with-ai/blob/main/material/AI_performance_on_a_set_of_Ph.D.-level_science_questions.png)
+![AIPhdBm](https://github.com/Pruebas-de-Software/supercharge-testing-with-ai/blob/main/material/AI_performance_on_a_set_of_Ph.D.-level_science_questions2026.png)
 
 [ref: AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard)
 
