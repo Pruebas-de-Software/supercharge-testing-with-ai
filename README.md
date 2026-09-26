@@ -33,6 +33,9 @@ La ingeniería de software moderna exige ciclos de entrega cada vez más rápido
 
 En este repositorio encontrarás
 
+## Tareas
+- [Construye una plataforma base para aplicaciones Webs basada en agentes de Ia](#)
+
 ## Temas
 
 Primera versión del material de **INF331 — Pruebas de Software, UTFSM**, con un caso práctico transversal, prompts, ejemplos y actividades.
